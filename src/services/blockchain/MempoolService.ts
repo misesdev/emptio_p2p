@@ -8,9 +8,20 @@ import axios, { AxiosInstance } from "axios"
 
 class MempoolService implements IBlockChainService
 {
-    private readonly _httpClient: AxiosInstance;
+    private _httpClient: AxiosInstance;
 
     constructor (network: BNetwork = "mainnet") 
+    {
+        let apiUrl = process.env.MEMPOOL_MAIN as string
+        if(network == "testnet")
+            apiUrl = process.env.MEMPOOL_TESTNET as string
+        this._httpClient = axios.create({
+            baseURL: apiUrl,
+            timeout: 10000
+        })
+    }
+
+    public setNetwork(network: BNetwork) 
     {
         let apiUrl = process.env.MEMPOOL_MAIN as string
         if(network == "testnet")

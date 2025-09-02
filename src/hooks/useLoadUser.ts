@@ -16,8 +16,7 @@ const useLoadUser = () => {
 
     const loadUser = async () => {
         const user = await storage.get()
-        if(user)
-            setUser(user)
+        if(user) setUser(user)
         setLoading(false)
     }
 

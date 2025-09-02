@@ -40,20 +40,20 @@ const WalletNameScreen = ({ navigation, route }: any) => {
             <View style={styles.content}>
                 <View style={styles.titleContainer}>
                     <Text style={styles.title}>
-                        Dê um nome para sua carteira
+                        {useTranslate("wallet.name.title")}
                     </Text>
                 </View>
 
                 <View style={styles.descriptionContainer}>
                     <Text style={styles.description} >
-                        Escolha um nome para identificar esta carteira. Ele aparecerá na lista de carteiras e nas seleções.
+                        {useTranslate("wallet.name.description")}
                     </Text>
                 </View>
 
                 <FormControl  
                     value={name} 
                     onChangeText={setName}                 
-                    label={useTranslate("labels.wallet.name")}
+                    label={useTranslate("wallet.labels.name")}
                 />
             </View>
 

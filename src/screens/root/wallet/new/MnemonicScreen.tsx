@@ -21,14 +21,13 @@ const MnemonicScreen = ({ navigation, route }: any) => {
             <View style={styles.content}>
                 <View style={styles.titleContainer}>
                     <Text style={styles.title}>
-                        Sua Frase Secreta 
+                        {useTranslate("wallet.mnemonic.title")}  
                     </Text>
                 </View>
                     
                 <View style={styles.descriptionContainer}>
                     <Text style={styles.description} >
-                        Anote essas palavras em um local seguro. Se você perder, não será possível 
-                        recuperar a carteira.  
+                        {useTranslate("wallet.mnemonic.description")}  
                     </Text>
                 </View>
 
@@ -51,7 +50,10 @@ const MnemonicScreen = ({ navigation, route }: any) => {
             </View>
 
             <View style={styles.buttonArea}>
-                <ButtonPrimary label={"Anotado"} onPress={continueToConfirmation} />
+                <ButtonPrimary 
+                    label={useTranslate("commons.noted")}
+                    onPress={continueToConfirmation} 
+                />
             </View>
         </ScrollView>
     )

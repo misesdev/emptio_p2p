@@ -33,13 +33,13 @@ const NewWalletModal = ({ navigation }: NewWalletModalProps) => {
                     icon="duplicate" 
                     onPress={onCreate}
                     label={useTranslate("commons.create")}
-                    description="Criar uma carteira nova de 12 palavras bip39 com passphrase"
+                    description={useTranslate("wallet.create.description")}
                 />
                 <OptionButtonScreen 
                     icon="key"
                     onPress={onImport}
                     label={useTranslate("commons.import")}
-                    description="Importar uma carteira a partir da 12 palavras bip39"
+                    description={useTranslate("wallet.import.description")}
                 />
             </View>
         </ModalBottom>

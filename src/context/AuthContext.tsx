@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, ReactNode, ReactElement } from 'react';
+import { createContext, useContext, useState, ReactNode, ReactElement, useEffect } from 'react';
 import { User } from '@services/user/types/User';
 import useLoadUser from '../hooks/useLoadUser';
 
@@ -22,7 +22,11 @@ const useAuth = (): AuthContextType => {
 const AuthProvider = ({ children }: { children: ReactNode }): ReactElement => {
    
     const { loading, user, setUser } = useLoadUser()
-    const [isLoggedIn, setIsLoggedIn] = useState(!!user)
+    const [isLoggedIn, setIsLoggedIn] = useState(false)
+
+    useEffect(() => {
+        setIsLoggedIn(!!user.pubkey)
+    }, [user])
 
     const login = (user: User) => {
         setIsLoggedIn(true)

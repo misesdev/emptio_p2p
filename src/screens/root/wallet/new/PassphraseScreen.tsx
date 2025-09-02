@@ -15,7 +15,7 @@ const WalletNameScreen = ({ navigation, route }: any) => {
 
     useEffect(() => {
         if(passphrase.length <= 0)
-            setButtonLabel("Continuar sem Passphrase")
+            setButtonLabel(useTranslate("wallet.passphrase.continue"))
         else if(passphrase.length == 1)
             setButtonLabel(useTranslate("commons.continue"))
     }, [passphrase])
@@ -31,14 +31,13 @@ const WalletNameScreen = ({ navigation, route }: any) => {
             <View style={styles.content}>
                 <View style={styles.titleContainer}>
                     <Text style={styles.title}>
-                        Adicione uma Passphrase a Carteira 
+                        {useTranslate("wallet.passphrase.title")}
                     </Text>
                 </View>
 
                 <View style={styles.descriptionContainer}>
                     <Text style={styles.description}>
-                        A passphrase torna sua carteira mais segura, se criada com a passphrase, 
-                        a carteira só poderá ser importada com a passphrase correta.
+                        {useTranslate("wallet.passphrase.description")}
                     </Text>
                 </View>
 
