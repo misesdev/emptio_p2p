@@ -33,13 +33,13 @@ const NewWalletModal = ({ navigation }: NewWalletModalProps) => {
                     icon="duplicate" 
                     onPress={onCreate}
                     label={useTranslate("commons.create")}
-                    description={useTranslate("wallet.create.description")}
+                    description={useTranslate("wallet.create.label")}
                 />
                 <OptionButtonScreen 
                     icon="key"
                     onPress={onImport}
                     label={useTranslate("commons.import")}
-                    description={useTranslate("wallet.import.description")}
+                    description={useTranslate("wallet.import.label")}
                 />
             </View>
         </ModalBottom>

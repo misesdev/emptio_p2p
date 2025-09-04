@@ -7,13 +7,14 @@ import { UserStorage } from "@storage/user/UserStorage";
 import { User } from "./types/User";
 import useNDKStore from "../zustand/useNDKStore";
 import { TimeSeconds } from "../converter/TimeSeconds";
-import { Utilities } from "@/src/utils/Utilities";
-import { AppSettingsStorage } from "@/src/storage/settings/AppSettingsStorage";
-import { AppSettings } from "@/src/storage/settings/types";
-import { PrivateKeyStorage } from "@/src/storage/pairkeys/PrivateKeyStorage";
+import { Utilities } from "@src/utils/Utilities";
+import { AppSettingsStorage } from "@storage/settings/AppSettingsStorage";
+import { AppSettings } from "@storage/settings/types";
+import { PrivateKeyStorage } from "@storage/pairkeys/PrivateKeyStorage";
 import NostrPairKey from "../nostr/pairkey/NostrPairKey";
 import { useTranslate } from "../translate/TranslateService";
 import { trackException } from "../telemetry";
+import axios from "axios"
 
 class UserService implements IUserService
 {
@@ -205,22 +206,23 @@ class UserService implements IUserService
     {
         try 
         {
-            let defaultPubkey = process.env.DEFAULT_PUBKEY 
-            const response = await fetch(`${process.env.NOSBOOK_API_URL}/search`, {
-                method: "post",
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    pubkey: this._profile?.pubkey ?? defaultPubkey,
-                    searchTerm,
-                    limit
-                })
+            let defaultPubkey = process.env.DEFAULT_PUBKEY
+           
+            const httpClient = axios.create({
+                baseURL: process.env.NOSBOOK_API_URL,
+                headers: { 'Content-Type': 'application/json' }
             })
 
-            if(!response.ok) 
+            const response = await httpClient.post("/search", {
+                pubkey: this._profile?.pubkey ?? defaultPubkey,
+                searchTerm,
+                limit
+            })
+
+            if(response.status != 200) 
                 throw new Error(await useTranslate("message.request.error"))
             
-            const users: any = await response.json()
-            return users.filter((u: any) => u.pubkey != this._profile?.pubkey)
+            return response.data.filter((u: any) => u.pubkey != this._profile?.pubkey)
                 .sort((a:any, b:any) => (b.similarity ?? 1) - (a.similarity ?? 1))
                 .map((user: any) => {
                     return {

@@ -1,5 +1,6 @@
 import { createContext, useContext, ReactNode, ReactElement, useEffect } from 'react';
 import useLoadSubscription from '../hooks/useLoadSubscription';
+import useDataEventStore from '@services/zustand/useDataEventStore';
 import { User } from '@services/user/types/User';
 import { Wallet } from '@services/wallet/types/Wallet';
 import { StoredItem } from '@storage/types';
@@ -9,7 +10,6 @@ import useLoadFollows from '../hooks/useLoadFollows';
 import useLoadSettings from '../hooks/useLoadSettings';
 import useLoadWallets from '../hooks/useLoadWallets';
 import { useAuth } from './AuthContext';
-import useDataEventStore from '../services/zustand/useDataEventStore';
 
 type UserContextType = {
     user: User;
