@@ -7,7 +7,7 @@ enableScreens()
 
 import "./libs/global"
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { StyleSheet, View } from 'react-native'
 import AppNavigator from "./src/routes/AppNavigator";
 import SplashScreen from "./src/components/general/SplashScreen";
