@@ -23,15 +23,15 @@ const AddRelayScreen = ({ navigation }: any) => {
 
     useEffect(() => {  handleSearch("") }, [])
 
-    const handleSearch = async (searchTerm: string) => {
+    const handleSearch = async (term: string) => {
 
         setLoading(true)
 
-        if(!searchTerm.trim().length) searchTerm = "nostr"
+        if(!term.trim().length) term = "nostr"
 
         const allRelays: NostrRelay[] = await relayService.list()
         
-        const result: NostrRelay[] = await relayService.search(searchTerm.trim()) 
+        const result: NostrRelay[] = await relayService.search({ term }) 
         
         setRelays(result.filter(r => !allRelays.find(relay => relay.url == r.url)))
         

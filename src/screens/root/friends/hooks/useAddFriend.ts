@@ -16,12 +16,11 @@ export const useAddFriend = () => {
             return setUsers([])
         setLoading(true)
         try {
-            const users = await userService.searchUser({ searchTerm, limit: 100 })
+            const users = await userService.searchUser({ searchTerm })
             const friends = followsEvent?.tags?.filter(t => t[0] == "p").map(t => t[1]) ?? []
             users.forEach(user => {
                 user.friend = friends.includes(user.pubkey ?? "")
             })
-            console.log(users)
             setUsers(users)        
         } catch(ex) { 
             console.log(ex) 

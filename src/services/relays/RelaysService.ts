@@ -1,6 +1,7 @@
-import { RelayStorage } from "@/src/storage/relays/RelayStorage";
+import { RelayStorage } from "@storage/relays/RelayStorage";
+import { IRelayService, SearchRelayProps } from "./IRelayService";
 import { NostrRelay } from "./types/NostrRelay";
-import { IRelayService } from "./IRelayService";
+import axios from "axios";
 
 class RelaysService implements IRelayService
 {
@@ -11,11 +12,9 @@ class RelaysService implements IRelayService
         this._storage = storage
     }
 
-    public async add(relayUrl: string): Promise<void>
+    public async add(url: string): Promise<void>
     {
-        await this._storage.add({
-            url: relayUrl
-        })
+        await this._storage.add({ url })
     }
 
     public async list(): Promise<NostrRelay[]>
@@ -43,32 +42,17 @@ class RelaysService implements IRelayService
         }
     }
 
-    public async search(searchTerm: string, limit: number = 100): Promise<NostrRelay[]>
+    public async search({ term, skip=0, take=100 }: SearchRelayProps): Promise<NostrRelay[]>
     {
-        try 
+        try
         {
-            const response = await fetch(`${process.env.NOSBOOK_API_URL}/relays/search`, {
-                method: "post",
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    searchTerm,
-                    limit
-                })
-            })
-
-            if(!response.ok) 
+            const httpClient = axios.create({ baseURL: process.env.NOSTRWIKI_API_URL })
+            const response = await httpClient.get(`/search/relays?term=${term.trim()}&skip=${skip}&take=${take}`)
+            if(response.status != 200) 
                 throw new Error("an unexpected error occurred during the request")
-            
-            const result: any[] = await response.json()
-
-            return result.sort((a, b) => (b.similarity ?? 1) - (a.similarity ?? 1))
-                .map((data: any): NostrRelay => {
-                    return { url: data.relay }
-                })
+            return response.data as NostrRelay[]
         }
-        catch {
-            return [] 
-        }
+        catch { return [] }
     }
 }
 

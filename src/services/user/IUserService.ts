@@ -1,9 +1,9 @@
-import { NDKEvent } from "@nostr-dev-kit/ndk-mobile";
 import { User } from "./types/User"
+import { NDKEvent } from "@nostr-dev-kit/ndk-mobile";
 import NostrPairKey from "../nostr/pairkey/NostrPairKey";
 
 export type SearchUserProps = {
-    searchTerm: string; limit: number;
+    searchTerm: string; skip?: number; take?: number;
 }
 export type UpdateProfileProps = {
     user: User, setUser?: (user: User) => void; upNostr?: boolean;

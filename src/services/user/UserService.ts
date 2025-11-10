@@ -178,9 +178,7 @@ class UserService implements IUserService
         if (!this._profile?.pubkey) 
             throw new Error("UserService not initialized");
         const notes = await this._note.listNotes({
-            kinds: [1],
-            authors: [this._profile.pubkey as string],
-            limit
+            kinds: [1], authors: [this._profile.pubkey as string], limit
         })
         return notes.filter(e => !e.tags.filter(t => t[0] == "e").length)
     }
@@ -202,36 +200,15 @@ class UserService implements IUserService
         return []
     }
 
-    public async searchUser({ searchTerm, limit }: SearchUserProps): Promise<User[]> 
+    public async searchUser({ searchTerm, skip=0, take=50 }: SearchUserProps): Promise<User[]> 
     {
         try 
         {
-            let defaultPubkey = process.env.DEFAULT_PUBKEY
-           
-            const httpClient = axios.create({
-                baseURL: process.env.NOSBOOK_API_URL,
-                headers: { 'Content-Type': 'application/json' }
-            })
-
-            const response = await httpClient.post("/search", {
-                pubkey: this._profile?.pubkey ?? defaultPubkey,
-                searchTerm,
-                limit
-            })
-
+            const httpClient = axios.create({ baseURL: process.env.NOSTRWIKI_API_URL })
+            const response = await httpClient.get(`/search/users?term=${searchTerm}&skip=${skip}&take=${take}`)
             if(response.status != 200) 
                 throw new Error(await useTranslate("message.request.error"))
-            
             return response.data.filter((u: any) => u.pubkey != this._profile?.pubkey)
-                .sort((a:any, b:any) => (b.similarity ?? 1) - (a.similarity ?? 1))
-                .map((user: any) => {
-                    return {
-                        name: user.name,
-                        pubkey: user.pubkey,
-                        picture: user.profile,
-                        display_name: user.displayName
-                    }
-                })
         }
         catch(ex) {
             trackException(ex)
