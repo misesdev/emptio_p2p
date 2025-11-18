@@ -4,13 +4,11 @@ import { SearchBox } from "@components/form/SearchBox"
 import useNDKStore from "@services/zustand/useNDKStore"
 import { useTranslateService } from "@src/providers/TranslateProvider"
 import MessageBox, { showMessage } from "@components/general/MessageBox"
-import TransparentLoader from "@components/general/TransparentLoader"
 import { NostrRelay } from "@services/relays/types/NostrRelay"
 import { useService } from "@src/providers/ServiceProvider"
 import { pushMessage } from "@services/notification"
 import { useEffect, useState } from "react"
 import { View } from "react-native"
-import axios from "axios"
 
 const AddRelayScreen = ({ navigation }: any) => {
 
@@ -19,7 +17,6 @@ const AddRelayScreen = ({ navigation }: any) => {
     const { useTranslate } = useTranslateService()
     const [relays, setRelays] = useState<NostrRelay[]>([])
     const [loading, setLoading] = useState<boolean>(true)
-    const [fetching, setFetching] = useState<boolean>(false)
 
     useEffect(() => {  handleSearch("") }, [])
 
@@ -39,36 +36,15 @@ const AddRelayScreen = ({ navigation }: any) => {
     }
 
     const handleOpenRelay = async (relay: NostrRelay) => {
-        try {
-            setFetching(true)
-
-            const httpClient = axios.create({ headers: { Accept: "application/nostr+json" } })
-
-            const response = await httpClient.get(relay.url.replace("wss", "https"))
-
-            if (response.status != 200)
-                throw new Error(useTranslate("message.relay.invalid"))
-        
-            // await relayService.update({
-            //     ...relay
-            // })
-
-            setFetching(false)
-
-            showMessage({
-                title: useTranslate("labels.relays.add"),
-                message: useTranslate("message.relay.adddetails"),
-                infolog: relay.url,
-                action: {
-                    label: useTranslate("commons.add"),
-                    onPress: async () => addRelay(relay.url)
-                }
-            })
-        }
-        catch (ex: any) {
-            pushMessage(ex?.message)
-            setFetching(false)
-        }
+        showMessage({
+            title: useTranslate("labels.relays.add"),
+            message: useTranslate("message.relay.adddetails"),
+            infolog: relay.url,
+            action: {
+                label: useTranslate("commons.add"),
+                onPress: async () => addRelay(relay.url)
+            }
+        })
     }
 
     const addRelay = async (relay: string) => {
@@ -97,17 +73,13 @@ const AddRelayScreen = ({ navigation }: any) => {
                 title={useTranslate("labels.relays.add")} 
                 onClose={() => navigation.goBack()}
             />
-
             <SearchBox
                 seachOnLenth={0}
                 loading={loading}
                 label={useTranslate("commons.search")} 
                 onSearch={handleSearch}
             />
-
             <RelayList relays={relays} onPressRelay={handleOpenRelay} />
-            
-            <TransparentLoader active={fetching} />
             <MessageBox />
         </View>
     )

@@ -2,6 +2,7 @@ import { RelayStorage } from "@storage/relays/RelayStorage";
 import { IRelayService, SearchRelayProps } from "./IRelayService";
 import { NostrRelay } from "./types/NostrRelay";
 import axios from "axios";
+import { trackException } from "../telemetry";
 
 class RelaysService implements IRelayService
 {
@@ -42,17 +43,21 @@ class RelaysService implements IRelayService
         }
     }
 
-    public async search({ term, skip=0, take=100 }: SearchRelayProps): Promise<NostrRelay[]>
+    public async search({ term, skip=0, take=50 }: SearchRelayProps): Promise<NostrRelay[]>
     {
         try
         {
             const httpClient = axios.create({ baseURL: process.env.NOSTRWIKI_API_URL })
             const response = await httpClient.get(`/search/relays?term=${term.trim()}&skip=${skip}&take=${take}`)
+            console.log(response.data)
             if(response.status != 200) 
                 throw new Error("an unexpected error occurred during the request")
             return response.data as NostrRelay[]
         }
-        catch { return [] }
+        catch(ex) { 
+            trackException(ex)
+            return [] 
+        }
     }
 }
 

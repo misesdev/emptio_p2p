@@ -88,13 +88,11 @@ export class Utilities
         switch(type)
         {
             case "testnet":
-                return await useTranslate("wallet.bitcoin.testnet.tag")
+                return await useTranslate("wallet.network.testnet.title")
             case "mainnet":
-                return await useTranslate("wallet.bitcoin.tag")
-            // case "lightning":
-            //     return await useTranslate("wallet.lightning.tag")
-            // default:
-            //     return await useTranslate("wallet.bitcoin.tag")
+                return await useTranslate("wallet.network.mainnet.title")
+            default:
+                return await useTranslate("wallet.network.mainnet.title")
         }
     }
 
